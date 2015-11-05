@@ -5,7 +5,7 @@ Express configuration
 
 (function() {
   'use strict';
-  var bodyParser, compression, config, cookieParser, errorHandler, express, favicon, methodOverride, morgan, passport, path;
+  var bodyParser, compression, config, cookieParser, errorHandler, express, favicon, methodOverride, morgan, passport, path, useragent;
 
   express = require('express');
 
@@ -22,6 +22,8 @@ Express configuration
   cookieParser = require('cookie-parser');
 
   errorHandler = require('errorhandler');
+
+  useragent = require('express-useragent');
 
   path = require('path');
 
@@ -42,6 +44,7 @@ Express configuration
     app.use(bodyParser.json());
     app.use(methodOverride());
     app.use(cookieParser());
+    app.use(useragent.express());
     app.use(passport.initialize());
     if ('production' === env) {
       app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));

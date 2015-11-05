@@ -22,9 +22,7 @@ Main application file
     return process.exit(-1);
   });
 
-  if (config.seedDB) {
-    require('./config/seed');
-  }
+  require('./config/seed');
 
   require('./config/dummy');
 

@@ -19,6 +19,7 @@
     port: process.env.PORT || 9000,
     seedDB: false,
     useRedis: true,
+    useLru: true,
     secrets: {
       session: 'node-dd-shortener-secret'
     },

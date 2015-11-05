@@ -5,13 +5,17 @@ Main application routes
 
 (function() {
   'use strict';
-  var async, cache, cacheStatus, config, ddurl, errors, logger, path, redis;
+  var async, cache, cacheStatus, config, ddurl, errors, logger, lru, lruCache, path, redis, request;
 
   path = require('path');
+
+  request = require('request');
 
   redis = require('redis');
 
   async = require('async');
+
+  lru = require('lru-cache');
 
   errors = require('./components/errors');
 
@@ -33,15 +37,31 @@ Main application routes
     });
   }
 
+  if (config.useLru) {
+    lruCache = lru({
+      max: 100,
+      maxAge: 1000 * 60 * 60
+    });
+  }
+
   module.exports = function(app) {
     app.use('/api/1.0/url', require('./api/url'));
+    app.use('/api/1.0/history', require('./api/history'));
     app.get(/^\/([0-9a-zA-Z\+\/]{6})$/, function(req, res, next) {
       return async.waterfall([
         function(callback) {
-          if (!cache || !cacheStatus) {
+          if (!lruCache) {
             return callback(null, null);
           }
+          return callback(null, lruCache.get(req.params[0] || null));
+        }, function(longUrl, callback) {
+          if (longUrl || !cache || !cacheStatus) {
+            return callback(null, longUrl);
+          }
           return cache.get(req.params[0], function(err, longUrl) {
+            if (lruCache) {
+              lruCache.set(req.params[0], longUrl);
+            }
             return callback(err, longUrl);
           });
         }, function(longUrl, callback) {
@@ -52,12 +72,16 @@ Main application routes
             if (!result) {
               return callback(null, null);
             }
-            if (!cache || !cacheStatus) {
+            if (lruCache) {
+              lruCache.set(req.params[0], result.longUrl);
+            }
+            if (cache && cacheStatus) {
+              return cache.set(req.params[0], result.longUrl, function(err) {
+                return callback(err, result.longUrl);
+              });
+            } else {
               return callback(err, result.longUrl);
             }
-            return cache.set(req.params[0], result.longUrl, function(err) {
-              return callback(err, result.longUrl);
-            });
           });
         }
       ], function(err, longUrl) {
@@ -67,7 +91,7 @@ Main application routes
         if (!longUrl) {
           return res.status(404).send('Not found URL');
         }
-        logger.increase(req.params[0]);
+        logger(req);
         return res.redirect(301, longUrl);
       });
     });

@@ -1,10 +1,16 @@
 (function() {
   'use strict';
-  var Url, async;
+  var Url, async, config;
 
   async = require('async');
 
   Url = require('../api/url/url.model');
+
+  config = require('./environment');
+
+  if (!config.seedDB) {
+    return;
+  }
 
   Url.count(function(err, length) {
     var j, results;

@@ -12,9 +12,11 @@
 
   router.post('/', controller.shorten);
 
-  router.get('/:id', controller.show);
-
   router.get('/', controller.expand);
+
+  router.get('/list', controller.list);
+
+  router.get('/:id', controller.show);
 
   router.put('/:id', auth.hasRole('admin'), controller.update);
 
