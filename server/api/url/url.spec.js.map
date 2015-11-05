@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "url.spec.js",
+  "sourceRoot": "",
+  "sources": [
+    "url.spec.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;EAAA;AAAA,MAAA;;EAEA,MAAA,GAAS,OAAA,CAAQ,QAAR;;EACT,GAAA,GAAM,OAAA,CAAQ,WAAR;;EACN,OAAA,GAAU,OAAA,CAAQ,WAAR;;EAEV,QAAA,CAAS,kBAAT,EAA6B,SAAA,GAAA,CAA7B;AANA"
+}

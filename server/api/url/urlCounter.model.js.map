@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "urlCounter.model.js",
+  "sourceRoot": "",
+  "sources": [
+    "urlCounter.model.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;EAAA;AAAA,MAAA;;EAEA,QAAA,GAAW,OAAA,CAAQ,UAAR;;EACX,MAAA,GAAS,QAAQ,CAAC;;EAElB,gBAAA,GAAuB,IAAA,MAAA,CACrB;IAAA,GAAA,EACE;MAAA,IAAA,EAAM,MAAN;MACA,QAAA,EAAU,IADV;KADF;IAGA,GAAA,EACE;MAAA,IAAA,EAAM,MAAN;MACA,SAAA,EAAS,CADT;KAJF;GADqB;;EAQvB,MAAM,CAAC,OAAP,GAAiB,QAAQ,CAAC,KAAT,CAAe,YAAf,EAA6B,gBAA7B;AAbjB"
+}
