@@ -1,8 +1,9 @@
 {
   "name": "node-dd-shortener",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "server/app.js",
   "dependencies": {
+    "async": "^1.5.0",
     "body-parser": "~1.12.4",
     "composable-middleware": "~0.3.0",
     "compression": "~1.4.4",
@@ -26,9 +27,9 @@
     "passport": "~0.2.2",
     "passport-local": "~1.0.0",
     "redis": "^2.3.0",
+    "request": "^2.65.0",
     "serve-favicon": "~2.2.1",
-    "url": "^0.11.0",
-    "valid-url": "^1.0.9"
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "coffeelint": "~1.9.7",
@@ -93,7 +94,7 @@
     "time-grunt": "~1.2.1"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=0.12.0"
   },
   "scripts": {
     "start": "node server/app.js",

@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var UrlModel, _, ddurl, handleError, url, validUrl;
+  var UrlModel, _, _checkUrl, ddurl, handleError, url;
 
   _ = require('lodash');
 
@@ -8,9 +8,13 @@
 
   UrlModel = require('./url.model');
 
-  validUrl = require('valid-url');
-
   ddurl = require('../../components/ddurl');
+
+  _checkUrl = function(url) {
+    var regexp;
+    regexp = /[-a-zA-Z0-9@:%_\+.~#?&\/\/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?/gi;
+    return regexp.test(url);
+  };
 
   exports.list = function(req, res) {
     return UrlModel.count(function(err, length) {
@@ -48,9 +52,14 @@
   };
 
   exports.shorten = function(req, res) {
-    var hrstart, longUrl;
-    longUrl = req.body.longUrl;
-    if (!validUrl.isUri(longUrl)) {
+    var hrstart, longUrl, parse;
+    parse = url.parse(req.body.longUrl);
+    if (!parse.protocol) {
+      longUrl = "http://" + parse.href;
+    } else {
+      longUrl = req.body.longUrl;
+    }
+    if (!_checkUrl(longUrl)) {
       return res.status(400).send('Bad Request');
     }
     hrstart = process.hrtime();
@@ -77,7 +86,7 @@
 
   exports.expand = function(req, res) {
     var hrstart, parse, shortenId;
-    if (!validUrl.isUri(req.query.shortUrl)) {
+    if (!_checkUrl.isUri(req.query.shortUrl)) {
       return res.status(400).send('Bad Request');
     }
     parse = url.parse(req.query.shortUrl, true);
