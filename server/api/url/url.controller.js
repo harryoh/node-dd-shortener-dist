@@ -12,22 +12,30 @@
 
   _checkUrl = function(url) {
     var regexp;
+    if (!url) {
+      return false;
+    }
     regexp = /[-a-zA-Z0-9@:%_\+.~#?&\/\/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?/gi;
     return regexp.test(url);
   };
 
   exports.list = function(req, res) {
     return UrlModel.count(function(err, length) {
-      var query, result;
+      var page, pagePerNumber, query, result;
       if (err) {
         return handleError(res, err);
       }
+      page = (req.query.page || 1) - 1;
+      if (page < 0) {
+        return handleError(res, new Error('Wrong page parameter'));
+      }
+      pagePerNumber = req.query.pagePerNumber || 20;
       result = {
         total: length
       };
       query = UrlModel.find().sort({
         createdAt: -1
-      }).limit(20);
+      }).skip(page * pagePerNumber).limit(pagePerNumber);
       return query.exec(function(err, urls) {
         if (err) {
           return handleError(res, err);
@@ -86,7 +94,7 @@
 
   exports.expand = function(req, res) {
     var hrstart, parse, shortenId;
-    if (!_checkUrl.isUri(req.query.shortUrl)) {
+    if (!_checkUrl(req.query.shortUrl)) {
       return res.status(400).send('Bad Request');
     }
     parse = url.parse(req.query.shortUrl, true);
